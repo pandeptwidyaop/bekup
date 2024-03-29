@@ -1,0 +1,35 @@
+{
+    "sources": [
+        {
+            "driver": "mysql",
+            "host": "localhost",
+            "port": "3306",
+            "username": "root",
+            "password": "123456",
+            "databases": [
+                "db1",
+                "db2",
+                "db3"
+            ]
+        }
+    ],
+    "destinations": [
+        {
+            "driver": "s3",
+            "aws_access_key": "asas",
+            "aws_secret_access_key": "1212",
+            "root_directory": "/home/pande",
+            "bucket": "thus-bucket",
+            "region": "ap-southeast-1"
+        },
+        {
+            "driver": "ftp",
+            "host": "localhost",
+            "port": "21",
+            "username": "root",
+            "password": "ccc",
+            "root_directory": "/home/root"
+        }
+    ],
+    "zip_password": "123456"
+}
