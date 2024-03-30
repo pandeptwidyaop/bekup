@@ -8,5 +8,6 @@ type BackupFileInfo struct {
 	TempPath     string
 	ZipPath      string
 	Config       config.ConfigSource
+	Uploads      map[string]string
 	Err          error
 }
