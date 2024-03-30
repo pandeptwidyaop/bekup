@@ -43,6 +43,7 @@ type Config struct {
 	Sources      []ConfigSource      `json:"sources"`
 	Destinations []ConfigDestination `json:"destinations"`
 	ZipPassword  string              `json:"zip_password"`
+	Worker       int                 `json:"worker"`
 }
 
 func LoadConfigFromPath(path string) (Config, error) {

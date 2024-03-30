@@ -4,23 +4,25 @@ import (
 	"context"
 	"fmt"
 	"testing"
+	"time"
 
-	"github.com/pandeptwidyaop/bekup/internal/bekup/mysql"
 	"github.com/pandeptwidyaop/bekup/internal/config"
+	"github.com/pandeptwidyaop/bekup/internal/mysql"
+	"github.com/pandeptwidyaop/bekup/internal/zip"
 	"golang.org/x/sync/errgroup"
 )
 
 func Test_run(t *testing.T) {
 	source := config.ConfigSource{
 		Driver:   "mysql",
-		Host:     "localhost",
-		Port:     "3306",
+		Host:     "127.0.0.1",
+		Port:     "33061",
 		Username: "root",
-		Password: "",
+		Password: "root",
 	}
 
-	for i := 0; i <= 100; i++ {
-		source.Databases = append(source.Databases, fmt.Sprintf("%d", i))
+	for i := 0; i < 1000; i++ {
+		source.Databases = append(source.Databases, "classicmodels")
 	}
 
 	ctx, cancel := context.WithCancel(context.Background())
@@ -28,12 +30,16 @@ func Test_run(t *testing.T) {
 
 	g, ctx := errgroup.WithContext(ctx)
 
-	ch := mysql.Register(ctx, source)
+	startAt := time.Now()
 
-	ch1 := mysql.BackupWithWorker(ctx, ch, 10)
+	chInit := mysql.Register(ctx, source)
+
+	chBackup := mysql.BackupWithWorker(ctx, chInit, 10)
+
+	chZip := zip.ZipWithWorker(ctx, chBackup, 10)
 
 	g.Go(func() error {
-		for f := range ch1 {
+		for f := range chZip {
 			if f.Err != nil {
 				return f.Err
 			}
@@ -46,5 +52,7 @@ func Test_run(t *testing.T) {
 		fmt.Println(err)
 		cancel()
 	}
+
+	fmt.Println(time.Since(startAt))
 
 }
