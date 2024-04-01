@@ -9,6 +9,7 @@ import (
 	"github.com/pandeptwidyaop/bekup/internal/exception"
 	"github.com/pandeptwidyaop/bekup/internal/models"
 	"github.com/pandeptwidyaop/bekup/internal/mysql"
+	"github.com/pandeptwidyaop/bekup/internal/s3"
 	"golang.org/x/sync/errgroup"
 )
 
@@ -35,8 +36,30 @@ func Run(ctx context.Context, config config.Config) error {
 	backupChan := mergeChannel(chans)
 
 	//Upload here
+	var uploadChans []<-chan models.BackupFileInfo
 
-	cleanupCh := cleanup.Run(ctx, backupChan)
+	for _, dst := range config.Destinations {
+		switch dst.Driver {
+		case "s3":
+		case "ftp":
+		default:
+			cancel()
+			return exception.ErrConfigDestinationDriverNotAvailable
+		}
+	}
+
+	for _, dst := range config.Destinations {
+		switch dst.Driver {
+		case "s3":
+			uploadChans = append(uploadChans, s3.Run(ctx, backupChan, dst, 10))
+		case "ftp":
+	
+		}
+	}
+
+	uploadCh := mergeChannel(uploadChans)
+
+	cleanupCh := cleanup.Run(ctx, uploadCh)
 
 	g.Go(func() error {
 		for m := range cleanupCh {
@@ -76,6 +99,30 @@ func mergeChannel(chans []<-chan models.BackupFileInfo) <-chan models.BackupFile
 			wg.Done()
 		}(ch)
 	}
+
+	return out
+}
+
+func mergeSequentialChannel(chans []<-chan models.BackupFileInfo) <-chan models.BackupFileInfo {
+	out := make(chan models.BackupFileInfo)
+
+	wg := sync.WaitGroup{}
+	wg.Add(len(chans))
+
+	go func() {
+		wg.Wait()
+		close(out)
+	}()
+
+	go func() {
+		for _, ch := range chans {
+			for c := range ch {
+				out <- c
+			}
+
+			wg.Done()
+		}
+	}()
 
 	return out
 }

@@ -12,4 +12,8 @@ var (
 	ErrConfigSourceError                   error = fmt.Errorf("config source has error, see log for more detail")
 	ErrConfigDestinationError              error = fmt.Errorf("config destination has error, see log for more detail")
 	ErrMysqldumpNotExist                   error = fmt.Errorf("error mysqldump is not exist on your system")
+	ErrAwsRegionNotExist                   error = fmt.Errorf("aws region is not define in config")
+	ErrAwsAccessKeyNotExist                error = fmt.Errorf("aws access key is not define in config")
+	ErrAwsAccessKeySecretNotExist          error = fmt.Errorf("aws access key secret key is not define in config")
+	ErrAwsBucketNotExist                   error = fmt.Errorf("aws bucket is not define in config")
 )

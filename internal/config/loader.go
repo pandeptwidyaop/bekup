@@ -31,7 +31,7 @@ type ConfigDestination struct {
 	AWSAccessKey  string `json:"aws_access_key"`
 	AWSSecretKey  string `json:"aws_secret_access_key"`
 	AWSBucket     string `json:"bucket"`
-	Regions       string `json:"region"`
+	Region        string `json:"region"`
 	RootDirectory string `json:"root_directory"`
 	Host          string `json:"host"`
 	FTPPort       string `json:"port"`
