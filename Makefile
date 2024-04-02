@@ -4,3 +4,4 @@ docker-ps:
 	docker compose -f deployments/local/docker-compose.yml ps
 docker-logs:
 	docker compose -f deployments/local/docker-compose.yml logs 
+build:

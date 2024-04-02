@@ -31,5 +31,6 @@
             "root_directory": "/home/root"
         }
     ],
-    "zip_password": "123456"
+    "zip_password": "123456",
+    "worker": 2
 }

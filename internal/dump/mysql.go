@@ -121,6 +121,7 @@ func mysqlDoBackup(f models.BackupFileInfo) models.BackupFileInfo {
 
 	err = command.Run()
 	if err != nil {
+		fmt.Println(err)
 		f.Err = errors.New(stderr.String())
 		return f
 	}

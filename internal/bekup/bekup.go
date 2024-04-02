@@ -27,7 +27,7 @@ func Run(ctx context.Context, config config.Config, worker int) error {
 
 	uploadCh := upload.Run(ctx, zipCh, worker, config.Destinations...)
 
-	cleanupCh := cleanup.Run(ctx, uploadCh)
+	cleanupCh := cleanup.Run(ctx, uploadCh, worker)
 
 	g.Go(func() error {
 		for m := range cleanupCh {
