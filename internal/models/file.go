@@ -6,10 +6,9 @@ type BackupFileInfo struct {
 	DatabaseName string
 	FileName     string
 	TempPath     string
+	ZipName      string
 	ZipPath      string
 	Config       config.ConfigSource
 	Uploads      map[string]string
 	Err          error
 }
-
-

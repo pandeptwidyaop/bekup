@@ -12,6 +12,10 @@ import (
 	"github.com/pandeptwidyaop/bekup/internal/models"
 )
 
+func Run(ctx context.Context, in <-chan models.BackupFileInfo, worker int) <-chan models.BackupFileInfo {
+	return ZipWithWorker(ctx, in, worker)
+}
+
 func Zip(ctx context.Context, in <-chan models.BackupFileInfo) <-chan models.BackupFileInfo {
 	out := make(chan models.BackupFileInfo)
 
@@ -63,6 +67,7 @@ func ZipWithWorker(ctx context.Context, in <-chan models.BackupFileInfo, worker 
 func doZip(f models.BackupFileInfo) models.BackupFileInfo {
 	log.GetInstance().Info("zip: zipping ", f.TempPath)
 	f.ZipPath = fmt.Sprintf("%s.zip", f.TempPath)
+	f.ZipName = fmt.Sprintf("%s.zip", f.FileName)
 
 	file, err := os.Create(f.ZipPath)
 	if err != nil {

@@ -30,8 +30,9 @@ type ConfigDestination struct {
 	Driver        string `json:"driver"`
 	AWSAccessKey  string `json:"aws_access_key"`
 	AWSSecretKey  string `json:"aws_secret_access_key"`
-	AWSBucket     string `json:"bucket"`
-	Region        string `json:"region"`
+	AWSBucket     string `json:"aws_bucket"`
+	AWSRegion     string `json:"aws_region"`
+	AWSUrl        string `json:"aws_url"`
 	RootDirectory string `json:"root_directory"`
 	Host          string `json:"host"`
 	FTPPort       string `json:"port"`
