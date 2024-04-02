@@ -1,0 +1,28 @@
+{
+    "sources": [
+        {
+            "driver": "mysql",
+            "host": "127.0.0.1",
+            "port": "33061",
+            "username": "test",
+            "password": "test",
+            "databases": [
+                "test"
+            ]
+        }
+    ],
+    "destinations": [
+        {
+            "driver": "s3",
+            "aws_region": "",
+            "aws_access_key": "asas",
+            "aws_secret_access_key": "1212",
+            "root_directory": "/home/pande",
+            "bucket": "thus-bucket",
+            "region": "ap-southeast-1"
+        }
+    ],
+    "zip_password": "123456",
+    "worker": 2,
+    "temp_path": "/home/pande/Projects/bekup-test/tests/temp"
+}

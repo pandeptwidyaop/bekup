@@ -9,6 +9,5 @@ type BackupFileInfo struct {
 	ZipName      string
 	ZipPath      string
 	Config       config.ConfigSource
-	Uploads      map[string]string
 	Err          error
 }

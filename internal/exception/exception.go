@@ -17,4 +17,5 @@ var (
 	ErrAwsAccessKeySecretNotExist          error = fmt.Errorf("aws access key secret key is not define in config")
 	ErrAwsBucketNotExist                   error = fmt.Errorf("aws bucket is not define in config")
 	ErrAwsUrlNotExist                      error = fmt.Errorf("aws url is not define in config")
+	ErrConfigTempPathNotExists             error = fmt.Errorf("config tempoary path not exists")
 )

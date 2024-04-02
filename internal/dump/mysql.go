@@ -104,7 +104,7 @@ func mysqlDoBackup(f models.BackupFileInfo) models.BackupFileInfo {
 	log.GetInstance().Info("mysql: Processing ", f.FileName)
 
 	var stderr bytes.Buffer
-	f.TempPath = path.Join(config.GetTempPath(), f.FileName)
+	f.TempPath = path.Join(f.TempPath, f.FileName)
 
 	file, err := os.Create(f.TempPath)
 	if err != nil {
@@ -121,7 +121,7 @@ func mysqlDoBackup(f models.BackupFileInfo) models.BackupFileInfo {
 
 	err = command.Run()
 	if err != nil {
-		fmt.Println(err)
+		// fmt.Println(err)
 		f.Err = errors.New(stderr.String())
 		return f
 	}

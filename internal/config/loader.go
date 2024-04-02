@@ -45,6 +45,7 @@ type Config struct {
 	Destinations []ConfigDestination `json:"destinations"`
 	ZipPassword  string              `json:"zip_password"`
 	Worker       int                 `json:"worker"`
+	TempPath     string              `json:"temp_path"`
 }
 
 func LoadConfigFromPath(path string) (Config, error) {
@@ -101,6 +102,14 @@ func LoadConfig(file io.Reader) (Config, error) {
 	if err != nil {
 		log.GetInstance().Error(err)
 		return conf, exception.ErrConfigSourceError
+	}
+
+	if conf.TempPath == "" {
+		return conf, exception.ErrConfigTempPathNotExists
+	}
+
+	if conf.Worker == 0 {
+		conf.Worker = 2
 	}
 
 	return conf, nil
