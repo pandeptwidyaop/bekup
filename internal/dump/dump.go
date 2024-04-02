@@ -7,7 +7,6 @@ import (
 	"github.com/pandeptwidyaop/bekup/internal/config"
 	"github.com/pandeptwidyaop/bekup/internal/exception"
 	"github.com/pandeptwidyaop/bekup/internal/models"
-	"github.com/pandeptwidyaop/bekup/internal/mysql"
 )
 
 func Run(ctx context.Context, worker int, sources ...config.ConfigSource) (<-chan models.BackupFileInfo, error) {
@@ -21,7 +20,7 @@ func databaseManager(ctx context.Context, worker int, sources ...config.ConfigSo
 	for _, source := range sources {
 		switch source.Driver {
 		case "mysql":
-			chans = append(chans, mysql.Run(ctx, source, worker))
+			chans = append(chans, MysqlRun(ctx, source, worker))
 		default:
 			return nil, exception.ErrConfigSourceDriverNotAvailable
 		}

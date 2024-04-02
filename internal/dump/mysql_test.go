@@ -1,4 +1,4 @@
-package mysql_test
+package dump_test
 
 import (
 	"context"
@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"github.com/pandeptwidyaop/bekup/internal/config"
-	"github.com/pandeptwidyaop/bekup/internal/mysql"
+	"github.com/pandeptwidyaop/bekup/internal/dump"
 	"github.com/pandeptwidyaop/bekup/internal/zip"
 	"golang.org/x/sync/errgroup"
 )
@@ -32,11 +32,9 @@ func Test_run(t *testing.T) {
 
 	startAt := time.Now()
 
-	chInit := mysql.Register(ctx, source)
+	chInit := dump.MysqlRun(ctx, source, 10)
 
-	chBackup := mysql.BackupWithWorker(ctx, chInit, 10)
-
-	chZip := zip.ZipWithWorker(ctx, chBackup, 10)
+	chZip := zip.ZipWithWorker(ctx, chInit, 10)
 
 	g.Go(func() error {
 		for f := range chZip {
