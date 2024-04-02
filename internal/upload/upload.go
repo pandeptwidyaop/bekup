@@ -49,9 +49,16 @@ func run(ctx context.Context, in <-chan models.BackupFileInfo, destinations ...c
 		for f := range in {
 			for _, destination := range destinations {
 				select {
-				case out <- uploadManager(ctx, f, destination):
+
 				case <-ctx.Done():
 					return
+				default:
+					if f.Err != nil {
+						out <- f
+						return
+					}
+
+					out <- uploadManager(ctx, f, destination)
 				}
 			}
 		}

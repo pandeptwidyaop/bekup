@@ -23,10 +23,18 @@ func Zip(ctx context.Context, in <-chan models.BackupFileInfo) <-chan models.Bac
 		defer close(out)
 
 		for file := range in {
+
 			select {
-			case out <- doZip(file):
 			case <-ctx.Done():
 				return
+			default:
+				if file.Err != nil {
+					out <- file
+					continue
+				}
+
+				out <- doZip(file)
+
 			}
 		}
 	}()

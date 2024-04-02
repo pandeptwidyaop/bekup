@@ -11,6 +11,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/s3"
 	"github.com/pandeptwidyaop/bekup/internal/config"
 	"github.com/pandeptwidyaop/bekup/internal/exception"
+	"github.com/pandeptwidyaop/bekup/internal/log"
 	"github.com/pandeptwidyaop/bekup/internal/models"
 )
 
@@ -21,6 +22,8 @@ func S3Upload(ctx context.Context, f models.BackupFileInfo, d config.ConfigDesti
 		return f
 	}
 	defer file.Close()
+
+	log.GetInstance().Info("s3: uploading ", f.ZipPath, " to s3")
 
 	client, err := newS3Client(ctx, d)
 	if err != nil {
@@ -39,6 +42,8 @@ func S3Upload(ctx context.Context, f models.BackupFileInfo, d config.ConfigDesti
 
 		return f
 	}
+
+	log.GetInstance().Info("s3: ", f.ZipPath," uploaded to s3")
 
 	return f
 }

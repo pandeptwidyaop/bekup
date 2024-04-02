@@ -205,7 +205,11 @@ func checkSourceMysqlDriver(source ConfigSource) error {
 		}
 	}
 
-	return errors.New("config mysql: some field empty: " + strings.Join(msg, ","))
+	if len(msg) > 0 {
+		return errors.New("config mysql: some field empty: " + strings.Join(msg, ","))
+	}
+
+	return nil
 }
 
 func checkSourcePostgresDriver(source ConfigSource) error {

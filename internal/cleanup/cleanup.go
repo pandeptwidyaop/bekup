@@ -3,6 +3,7 @@ package cleanup
 import (
 	"context"
 	"os"
+	"strings"
 	"sync"
 
 	"github.com/pandeptwidyaop/bekup/internal/log"
@@ -63,22 +64,68 @@ func cleanup(ctx context.Context, in <-chan models.BackupFileInfo) <-chan models
 
 func doCleanup(f models.BackupFileInfo) models.BackupFileInfo {
 	if f.TempPath != "" {
-		log.GetInstance().Info("cleanup: removing ", f.TempPath)
 
-		err := os.Remove(f.TempPath)
-		if err != nil {
-			f.Err = err
+		log.GetInstance().Info("cleanup: removing ", f.TempPath)
+		if checkFileExist(f.TempPath) {
+			err := os.Remove(f.TempPath)
+			if err != nil {
+				f.Err = err
+			}
+		} else {
+			log.GetInstance().Warn("file ", f.TempPath, " is not exist")
 		}
 	}
 
 	if f.ZipPath != "" {
 		log.GetInstance().Info("cleanup: removing ", f.ZipPath)
 
-		err := os.Remove(f.ZipPath)
-		if err != nil {
-			f.Err = err
+		if checkFileExist(f.ZipPath) {
+			err := os.Remove(f.ZipPath)
+			if err != nil {
+				f.Err = err
+			}
+		} else {
+			log.GetInstance().Warn("file ", f.TempPath, " is not exist")
 		}
+
 	}
 
 	return f
+}
+
+func checkFileExist(path string) bool {
+	_, err := os.Stat(path)
+	if err != nil {
+		if os.IsNotExist(err) {
+			return false
+		}
+	}
+
+	return true
+}
+
+func ForceCleanUp() ([]string, error) {
+	all := []string{}
+
+	files, err := os.ReadDir(".")
+	if err != nil {
+		return all, err
+	}
+
+	for _, f := range files {
+		if f.IsDir() {
+			continue
+		}
+
+		if strings.HasSuffix(f.Name(), ".sql") || strings.HasSuffix(f.Name(), ".zip") {
+			err := os.Remove(f.Name())
+			if err != nil {
+				return all, err
+			}
+
+			all = append(all, f.Name())
+		}
+	}
+
+	return all, nil
 }

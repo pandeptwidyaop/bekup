@@ -13,6 +13,7 @@ import (
 
 func Run(ctx context.Context, config config.Config, worker int) error {
 	ctx, cancel := context.WithCancel(ctx)
+
 	defer cancel()
 
 	g, ctx := errgroup.WithContext(ctx)
