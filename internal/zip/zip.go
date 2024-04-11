@@ -32,7 +32,7 @@ func Zip(ctx context.Context, in <-chan *models.BackupFileInfo) <-chan *models.B
 					return
 				}
 
-				if info != nil {
+				if info == nil {
 					continue
 				}
 
@@ -91,7 +91,7 @@ func doZip(f *models.BackupFileInfo) *models.BackupFileInfo {
 	if err != nil {
 		f.Err = err
 		return f
-	}
+	}	
 
 	if typ == "file" {
 		return doZipSingleFile(f)
