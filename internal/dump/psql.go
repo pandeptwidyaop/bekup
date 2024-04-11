@@ -38,7 +38,7 @@ func postgresRegister(ctx context.Context, source config.ConfigSource) <-chan *m
 			default:
 				id := uuid.New().String()
 
-				fileName := fmt.Sprintf("postgres-%s-%s-%s.sql", time.Now(), db, id)
+				fileName := fmt.Sprintf("postgres-%s-%s-%s.sql", time.Now().Format("2006-01-02-15-04-05-00"), db, id)
 
 				log.GetInstance().Info("postgres: registering db ", db)
 

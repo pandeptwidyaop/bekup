@@ -12,6 +12,12 @@ services:
       - POSTGRES_PASSWORD=test
       - POSTGRES_USER=test
       - POSTGRES_DB=test
+  mongo:
+    image: mongo
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=test
+      - MONGO_INITDB_ROOT_PASSWORD=test
+      - MONGO_INITDB_DATABASE=test
   app:
     build:
       context: .

@@ -18,12 +18,13 @@ var (
 )
 
 type ConfigSource struct {
-	Driver    string   `json:"driver" validate:"required"`
-	Host      string   `json:"host"`
-	Port      string   `json:"port"`
-	Username  string   `json:"username"`
-	Password  string   `json:"password"`
-	Databases []string `json:"databases"`
+	Driver     string   `json:"driver" validate:"required"`
+	Host       string   `json:"host"`
+	Port       string   `json:"port"`
+	Username   string   `json:"username"`
+	Password   string   `json:"password"`
+	Databases  []string `json:"databases"`
+	MongoDBURI string   `json:"mongodb_uri"`
 }
 
 type ConfigDestination struct {

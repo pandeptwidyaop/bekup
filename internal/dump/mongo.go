@@ -37,7 +37,7 @@ func mongoRegister(ctx context.Context, source config.ConfigSource) <-chan *mode
 			default:
 				id := uuid.New().String()
 
-				fileName := fmt.Sprintf("mongo-%s-%s-%s", time.Now(), db, id)
+				fileName := fmt.Sprintf("mongo-%s-%s-%s", time.Now().Format("2006-01-02-15-04-05-00"), db, id)
 
 				log.GetInstance().Info("mongo: registering db ", db)
 
@@ -129,7 +129,13 @@ func mongoDoBackup(f *models.BackupFileInfo) *models.BackupFileInfo {
 		return f
 	}
 
-	uri := fmt.Sprintf("mongodb://%s:%s@%s:%s", f.Config.Username, f.Config.Password, f.Config.Host, f.Config.Port)
+	var uri string
+
+	if f.Config.MongoDBURI != "" {
+		uri = f.Config.MongoDBURI
+	} else {
+		uri = fmt.Sprintf("mongodb://%s:%s@%s:%s", f.Config.Username, f.Config.Password, f.Config.Host, f.Config.Port)
+	}
 
 	command := exec.Command("mongodump", "--uri", uri, "--db", f.DatabaseName, "--out", f.TempPath)
 
