@@ -34,6 +34,12 @@ Simply, you just need to download Bekup from the release page, then run Bekup wi
 
 `./bekup --config=path/to/config.json`
 
+To run backup regulary using crontab you can add this command:
+
+`crontab -e`
+
+`* * 1 * * /path/to/bekup --config=/path/to/config.json`
+
 ## Configuration
 
 To run Bekup, a configuration file with a `json` extension is required. You can download a sample of it [here](/configs/example.config.json).
@@ -45,7 +51,12 @@ To run Bekup, a configuration file with a `json` extension is required. You can 
 | `sources.*.port`|`string` |Database port |
 | `sources.*.username` |`string`| Database username |
 | `sources.*.password` |`string`| Database password |
-| `sources.*.mongodb_uri`|`string`| For mongodb driver oonly, if `mongodb_uri` defined will ignore other host,port,username and password. Example `mongodb://username:password@host:port?authSource=admin`
+| `sources.*.mongodb_uri`|`string`| For mongodb driver only, if `mongodb_uri` defined will ignore other host,port,username and password. Example `mongodb://username:password@host:port?authSource=admin`|
+|`source.*.databases.*`| `string`| Database name want to backup |
+| `destinations.*.driver`|`string`|Driver options for backup destination, now options are `s3`,`ftp`,`sftp`|
+|`destinations.*.aws_access_key`|`string`|Your aws access key, required if using `s3` driver|
+|`destinations.*.aws_secret_key`|`string`|Yout aws access secret key, required if using `s3` driver|
+
 
 
 ## For Docker User
