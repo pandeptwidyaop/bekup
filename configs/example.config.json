@@ -3,26 +3,39 @@
         {
             "driver": "mysql",
             "host": "127.0.0.1",
-            "port": "33061",
+            "port": "3306",
             "username": "test",
             "password": "test",
             "databases": [
-                "test"
+                "database-1",
+                "database-2",
+                "database-3"
+            ]
+        },
+        {
+            "driver": "postgres",
+            "host": "127.0.0.1",
+            "port": "5432",
+            "username": "postgres",
+            "password": "postgres",
+            "databases": [
+                "database-1",
+                "database-2",
+                "database-3"
             ]
         }
     ],
     "destinations": [
         {
             "driver": "s3",
-            "aws_region": "",
-            "aws_access_key": "asas",
-            "aws_secret_access_key": "1212",
-            "root_directory": "/home/pande",
-            "bucket": "thus-bucket",
-            "region": "ap-southeast-1"
+            "aws_region": "ap-southeast-3",
+            "aws_access_key": "YourAwsKey",
+            "aws_secret_access_key": "YourAwsKeySecret",
+            "root_directory": "/root/bucket/directtory",
+            "bucket": "bucket-name",
+            "aws_url": "http://minio:8080"
         }
     ],
     "zip_password": "123456",
-    "worker": 2,
-    "temp_path": "/home/pande/Projects/bekup-test/tests/temp"
+    "worker": 2
 }

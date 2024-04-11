@@ -30,9 +30,22 @@ For convenience, you can use a ready-to-use Docker image, [See docker instructio
 
 ## How to use
 
-Simply, you just need to download Bekup from the release page, then run Bekup with the command `./bekup --config=path/to/config.json`
+Simply, you just need to download Bekup from the release page, then run Bekup with the command : 
+
+`./bekup --config=path/to/config.json`
 
 ## Configuration
+
+To run Bekup, a configuration file with a `json` extension is required. You can download a sample of it [here](/configs/example.config.json).
+
+| Json Key | Type|Description |
+|----------|-----|-------|
+| `sources.*.driver` | `string` |Database driver, available options : `mysql`,`postgres`,`mongodb`|
+| `sources.*.host`|`string` |Database host |
+| `sources.*.port`|`string` |Database port |
+| `sources.*.username` |`string`| Database username |
+| `sources.*.password` |`string`| Database password |
+| `sources.*.mongodb_uri`|`string`| For mongodb driver oonly, if `mongodb_uri` defined will ignore other host,port,username and password. Example `mongodb://username:password@host:port?authSource=admin`
 
 
 ## For Docker User
