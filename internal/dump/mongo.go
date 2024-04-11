@@ -1,8 +1,13 @@
 package dump
 
 import (
+	"bytes"
 	"context"
+	"errors"
 	"fmt"
+	"os"
+	"os/exec"
+	"path"
 	"sync"
 	"time"
 
@@ -113,6 +118,28 @@ func mongoBackup(ctx context.Context, in <-chan *models.BackupFileInfo) <-chan *
 }
 
 func mongoDoBackup(f *models.BackupFileInfo) *models.BackupFileInfo {
-	//TODO: Add mongodb backup command
+	log.GetInstance().Info("mongo: processing ", f.FileName)
+
+	var stderr bytes.Buffer
+	f.TempPath = path.Join(f.TempPath, f.FileName)
+
+	err := os.MkdirAll(f.TempPath, 0775)
+	if err != nil {
+		f.Err = err
+		return f
+	}
+
+	uri := fmt.Sprintf("mongodb://%s:%s@%s:%s", f.Config.Username, f.Config.Password, f.Config.Host, f.Config.Port)
+
+	command := exec.Command("mongodump", "--uri", uri, "--db", f.DatabaseName, "--out", f.TempPath)
+
+	command.Stderr = &stderr
+
+	err = command.Run()
+	if err != nil {
+		f.Err = errors.New(stderr.String())
+		return f
+	}
+
 	return f
 }

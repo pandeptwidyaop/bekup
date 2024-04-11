@@ -13,3 +13,4 @@
 - [ ] FTP & SFTP Driver
 - [ ] API Documentation
 - [ ] Dockerfile
+- [ ] Add password to archive zip file
