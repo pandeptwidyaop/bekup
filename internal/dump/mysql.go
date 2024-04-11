@@ -87,9 +87,14 @@ func mysqlBackup(ctx context.Context, in <-chan models.BackupFileInfo) <-chan mo
 	go func() {
 		defer close(out)
 
-		for info := range in {
+		for {
 			select {
-			case out <- mysqlDoBackup(info):
+			case info, ok := <-in:
+				if !ok {
+					return
+				}
+
+				out <- mysqlDoBackup(info)
 			case <-ctx.Done():
 				return
 			}

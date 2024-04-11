@@ -21,6 +21,8 @@ func databaseManager(ctx context.Context, worker int, sources ...config.ConfigSo
 		switch source.Driver {
 		case "mysql":
 			chans = append(chans, MysqlRun(ctx, source, worker))
+		case "postgres":
+			chans = append(chans, PostgresRun(ctx, source, worker))
 		default:
 			return nil, exception.ErrConfigSourceDriverNotAvailable
 		}

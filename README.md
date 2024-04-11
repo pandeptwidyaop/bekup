@@ -6,7 +6,7 @@
 
 ## TODO 
 
-- [x] MySQL Driver
+- [x] MySQL & MariaDB Driver
 - [ ] PostgreSQL Driver
 - [ ] MongoDB Driver
 - [x] AWS S3 & MinIO Driver

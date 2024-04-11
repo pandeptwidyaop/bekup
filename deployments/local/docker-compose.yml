@@ -6,8 +6,12 @@ services:
       - MYSQL_USER=test
       - MYSQL_PASSWORD=test
       - MYSQL_DATABASE=test
-    ports:
-      - 33061:3306
+  postgres:
+    image: postgres:alpine
+    environment:
+      - POSTGRES_PASSWORD=test
+      - POSTGRES_USER=test
+      - POSTGRES_DB=test
   app:
     build:
       context: .
