@@ -97,7 +97,8 @@ func mongoBackup(ctx context.Context, in <-chan *models.BackupFileInfo) <-chan *
 				}
 
 				if info.Err != nil {
-					return
+					out <- info
+					continue
 				}
 
 				out <- mongoDoBackup(info)
@@ -112,6 +113,6 @@ func mongoBackup(ctx context.Context, in <-chan *models.BackupFileInfo) <-chan *
 }
 
 func mongoDoBackup(f *models.BackupFileInfo) *models.BackupFileInfo {
-
+	//TODO: Add mongodb backup command
 	return f
 }

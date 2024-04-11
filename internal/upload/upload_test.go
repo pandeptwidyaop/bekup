@@ -17,13 +17,13 @@ func Test_Run(t *testing.T) {
 	ctx, cancel := context.WithCancel(ctx)
 	defer cancel()
 
-	ch := make(chan models.BackupFileInfo)
+	ch := make(chan *models.BackupFileInfo)
 
 	go func() {
 		defer close(ch)
 
 		for i := 0; i < 100; i++ {
-			ch <- models.BackupFileInfo{
+			ch <- &models.BackupFileInfo{
 				ZipPath:      "/Users/pande/Projects/bekup/tests/temp/zip.zip",
 				ZipName:      fmt.Sprintf("mysql-2024-04-01-10-00-00-%d.sql.zip", i),
 				DatabaseName: fmt.Sprintf("database-%d", i),
@@ -54,7 +54,7 @@ func Test_Run(t *testing.T) {
 
 	ch2 := upload.Run(ctx, ch, 10, cf...)
 
-	var dt []models.BackupFileInfo
+	var dt []*models.BackupFileInfo
 
 	for m := range ch2 {
 		dt = append(dt, m)

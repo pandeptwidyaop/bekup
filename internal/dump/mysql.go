@@ -17,15 +17,15 @@ import (
 	"github.com/pandeptwidyaop/bekup/internal/models"
 )
 
-func MysqlRun(ctx context.Context, source config.ConfigSource, worker int) <-chan models.BackupFileInfo {
+func MysqlRun(ctx context.Context, source config.ConfigSource, worker int) <-chan *models.BackupFileInfo {
 	ch := mysqlRegister(ctx, source)
 
 	return mysqlBackupWithWorker(ctx, ch, worker)
 }
 
-func mysqlRegister(ctx context.Context, source config.ConfigSource) <-chan models.BackupFileInfo {
+func mysqlRegister(ctx context.Context, source config.ConfigSource) <-chan *models.BackupFileInfo {
 	log.GetInstance().Info("mysql: preparing backup")
-	channel := make(chan models.BackupFileInfo)
+	channel := make(chan *models.BackupFileInfo)
 
 	go func() {
 		defer close(channel)
@@ -35,7 +35,7 @@ func mysqlRegister(ctx context.Context, source config.ConfigSource) <-chan model
 			fileName := fmt.Sprintf("mysql-%s-%s-%s.sql", time.Now().Format("2006-01-02-15-04-05-00"), db, id)
 			log.GetInstance().Info("mysql: registering db ", db)
 			select {
-			case channel <- models.BackupFileInfo{
+			case channel <- &models.BackupFileInfo{
 				DatabaseName: db,
 				FileName:     fileName,
 				Config:       source,
@@ -51,11 +51,11 @@ func mysqlRegister(ctx context.Context, source config.ConfigSource) <-chan model
 	return channel
 }
 
-func mysqlBackupWithWorker(ctx context.Context, in <-chan models.BackupFileInfo, worker int) <-chan models.BackupFileInfo {
+func mysqlBackupWithWorker(ctx context.Context, in <-chan *models.BackupFileInfo, worker int) <-chan *models.BackupFileInfo {
 	wg := sync.WaitGroup{}
 
-	out := make(chan models.BackupFileInfo)
-	var ins []<-chan models.BackupFileInfo
+	out := make(chan *models.BackupFileInfo)
+	var ins []<-chan *models.BackupFileInfo
 
 	wg.Add(worker)
 
@@ -69,7 +69,7 @@ func mysqlBackupWithWorker(ctx context.Context, in <-chan models.BackupFileInfo,
 	}()
 
 	for _, ch := range ins {
-		go func(c <-chan models.BackupFileInfo) {
+		go func(c <-chan *models.BackupFileInfo) {
 			for cc := range c {
 				out <- cc
 			}
@@ -81,8 +81,8 @@ func mysqlBackupWithWorker(ctx context.Context, in <-chan models.BackupFileInfo,
 	return out
 }
 
-func mysqlBackup(ctx context.Context, in <-chan models.BackupFileInfo) <-chan models.BackupFileInfo {
-	out := make(chan models.BackupFileInfo)
+func mysqlBackup(ctx context.Context, in <-chan *models.BackupFileInfo) <-chan *models.BackupFileInfo {
+	out := make(chan *models.BackupFileInfo)
 
 	go func() {
 		defer close(out)
@@ -92,6 +92,15 @@ func mysqlBackup(ctx context.Context, in <-chan models.BackupFileInfo) <-chan mo
 			case info, ok := <-in:
 				if !ok {
 					return
+				}
+
+				if info == nil {
+					continue
+				}
+
+				if info.Err != nil {
+					out <- info
+					continue
 				}
 
 				out <- mysqlDoBackup(info)
@@ -105,7 +114,7 @@ func mysqlBackup(ctx context.Context, in <-chan models.BackupFileInfo) <-chan mo
 	return out
 }
 
-func mysqlDoBackup(f models.BackupFileInfo) models.BackupFileInfo {
+func mysqlDoBackup(f *models.BackupFileInfo) *models.BackupFileInfo {
 	log.GetInstance().Info("mysql: Processing ", f.FileName)
 
 	var stderr bytes.Buffer

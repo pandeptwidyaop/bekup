@@ -9,13 +9,13 @@ import (
 	"github.com/pandeptwidyaop/bekup/internal/models"
 )
 
-func Run(ctx context.Context, worker int, sources ...config.ConfigSource) (<-chan models.BackupFileInfo, error) {
+func Run(ctx context.Context, worker int, sources ...config.ConfigSource) (<-chan *models.BackupFileInfo, error) {
 	return databaseManager(ctx, worker, sources...)
 }
 
-func databaseManager(ctx context.Context, worker int, sources ...config.ConfigSource) (<-chan models.BackupFileInfo, error) {
+func databaseManager(ctx context.Context, worker int, sources ...config.ConfigSource) (<-chan *models.BackupFileInfo, error) {
 
-	var chans []<-chan models.BackupFileInfo
+	var chans []<-chan *models.BackupFileInfo
 
 	for _, source := range sources {
 		switch source.Driver {
@@ -31,8 +31,8 @@ func databaseManager(ctx context.Context, worker int, sources ...config.ConfigSo
 	return mergeChannel(chans), nil
 }
 
-func mergeChannel(chans []<-chan models.BackupFileInfo) <-chan models.BackupFileInfo {
-	out := make(chan models.BackupFileInfo)
+func mergeChannel(chans []<-chan *models.BackupFileInfo) <-chan *models.BackupFileInfo {
+	out := make(chan *models.BackupFileInfo)
 	wg := sync.WaitGroup{}
 
 	wg.Add(len(chans))
@@ -43,7 +43,7 @@ func mergeChannel(chans []<-chan models.BackupFileInfo) <-chan models.BackupFile
 	}()
 
 	for _, ch := range chans {
-		go func(c <-chan models.BackupFileInfo) {
+		go func(c <-chan *models.BackupFileInfo) {
 			for c := range ch {
 				out <- c
 			}

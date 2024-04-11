@@ -106,7 +106,8 @@ func postgresBackup(ctx context.Context, in <-chan *models.BackupFileInfo) <-cha
 				}
 
 				if info.Err != nil {
-					return
+					out <- info
+					continue
 				}
 
 				out <- postgresDoBackup(info)

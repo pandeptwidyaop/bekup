@@ -10,12 +10,12 @@ import (
 	"github.com/pandeptwidyaop/bekup/internal/models"
 )
 
-func Run(ctx context.Context, in <-chan models.BackupFileInfo, worker int, destinations ...config.ConfigDestination) <-chan models.BackupFileInfo {
-	out := make(chan models.BackupFileInfo)
+func Run(ctx context.Context, in <-chan *models.BackupFileInfo, worker int, destinations ...config.ConfigDestination) <-chan *models.BackupFileInfo {
+	out := make(chan *models.BackupFileInfo)
 
 	wg := sync.WaitGroup{}
 
-	var lists []<-chan models.BackupFileInfo
+	var lists []<-chan *models.BackupFileInfo
 
 	wg.Add(worker)
 
@@ -29,7 +29,7 @@ func Run(ctx context.Context, in <-chan models.BackupFileInfo, worker int, desti
 	}()
 
 	for _, ls := range lists {
-		go func(c <-chan models.BackupFileInfo) {
+		go func(c <-chan *models.BackupFileInfo) {
 			for cc := range ls {
 				out <- cc
 			}
@@ -40,25 +40,33 @@ func Run(ctx context.Context, in <-chan models.BackupFileInfo, worker int, desti
 	return out
 }
 
-func run(ctx context.Context, in <-chan models.BackupFileInfo, destinations ...config.ConfigDestination) <-chan models.BackupFileInfo {
-	out := make(chan models.BackupFileInfo)
+func run(ctx context.Context, in <-chan *models.BackupFileInfo, destinations ...config.ConfigDestination) <-chan *models.BackupFileInfo {
+	out := make(chan *models.BackupFileInfo)
 
 	go func() {
 		defer close(out)
 
-		for f := range in {
+		for {
 			for _, destination := range destinations {
 				select {
-
 				case <-ctx.Done():
 					return
-				default:
-					if f.Err != nil {
-						out <- f
+				case info, ok := <-in:
+
+					if !ok {
 						return
 					}
 
-					out <- uploadManager(ctx, f, destination)
+					if info == nil {
+						continue
+					}
+
+					if info.Err != nil {
+						out <- info
+						continue
+					}
+
+					out <- uploadManager(ctx, info, destination)
 				}
 			}
 		}
@@ -67,7 +75,7 @@ func run(ctx context.Context, in <-chan models.BackupFileInfo, destinations ...c
 	return out
 }
 
-func uploadManager(ctx context.Context, f models.BackupFileInfo, d config.ConfigDestination) models.BackupFileInfo {
+func uploadManager(ctx context.Context, f *models.BackupFileInfo, d config.ConfigDestination) *models.BackupFileInfo {
 	switch d.Driver {
 	case "s3":
 		return S3Upload(ctx, f, d)

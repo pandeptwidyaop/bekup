@@ -12,39 +12,46 @@ import (
 	"github.com/pandeptwidyaop/bekup/internal/models"
 )
 
-func Run(ctx context.Context, in <-chan models.BackupFileInfo, worker int) <-chan models.BackupFileInfo {
+func Run(ctx context.Context, in <-chan *models.BackupFileInfo, worker int) <-chan *models.BackupFileInfo {
 	return ZipWithWorker(ctx, in, worker)
 }
 
-func Zip(ctx context.Context, in <-chan models.BackupFileInfo) <-chan models.BackupFileInfo {
-	out := make(chan models.BackupFileInfo)
+func Zip(ctx context.Context, in <-chan *models.BackupFileInfo) <-chan *models.BackupFileInfo {
+	out := make(chan *models.BackupFileInfo)
 
 	go func() {
 		defer close(out)
 
-		for file := range in {
-
+		for {
 			select {
-			case <-ctx.Done():
-				return
-			default:
-				if file.Err != nil {
-					out <- file
+			case info, ok := <-in:
+				if !ok {
+					return
+				}
+
+				if info != nil {
 					continue
 				}
 
-				out <- doZip(file)
+				if info.Err != nil {
+					out <- info
+					continue
+				}
 
+				out <- doZip(info)
+			case <-ctx.Done():
+				return
 			}
+
 		}
 	}()
 
 	return out
 }
 
-func ZipWithWorker(ctx context.Context, in <-chan models.BackupFileInfo, worker int) <-chan models.BackupFileInfo {
-	out := make(chan models.BackupFileInfo)
-	var ins []<-chan models.BackupFileInfo
+func ZipWithWorker(ctx context.Context, in <-chan *models.BackupFileInfo, worker int) <-chan *models.BackupFileInfo {
+	out := make(chan *models.BackupFileInfo)
+	var ins []<-chan *models.BackupFileInfo
 
 	wg := sync.WaitGroup{}
 	wg.Add(worker)
@@ -59,7 +66,7 @@ func ZipWithWorker(ctx context.Context, in <-chan models.BackupFileInfo, worker 
 	}()
 
 	for _, ch := range ins {
-		go func(c <-chan models.BackupFileInfo) {
+		go func(c <-chan *models.BackupFileInfo) {
 			for cc := range c {
 				out <- cc
 			}
@@ -72,7 +79,7 @@ func ZipWithWorker(ctx context.Context, in <-chan models.BackupFileInfo, worker 
 	return out
 }
 
-func doZip(f models.BackupFileInfo) models.BackupFileInfo {
+func doZip(f *models.BackupFileInfo) *models.BackupFileInfo {
 	log.GetInstance().Info("zip: zipping ", f.TempPath)
 	f.ZipPath = fmt.Sprintf("%s.zip", f.TempPath)
 	f.ZipName = fmt.Sprintf("%s.zip", f.FileName)
@@ -87,6 +94,7 @@ func doZip(f models.BackupFileInfo) models.BackupFileInfo {
 	zw := Z.NewWriter(file)
 	defer zw.Close()
 
+	//TODO: Must check the f.TempPath is file or just a directory
 	fileToZip, err := os.Open(f.TempPath)
 	if err != nil {
 		f.Err = err

@@ -15,7 +15,7 @@ import (
 	"github.com/pandeptwidyaop/bekup/internal/models"
 )
 
-func S3Upload(ctx context.Context, f models.BackupFileInfo, d config.ConfigDestination) models.BackupFileInfo {
+func S3Upload(ctx context.Context, f *models.BackupFileInfo, d config.ConfigDestination) *models.BackupFileInfo {
 	file, err := os.Open(f.ZipPath)
 	if err != nil {
 		f.Err = err
