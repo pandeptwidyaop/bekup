@@ -1,0 +1,1 @@
+@daily /usr/local/bin/bekup /data/config.json

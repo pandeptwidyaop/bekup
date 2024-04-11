@@ -11,3 +11,8 @@ docker-rebuild:
 docker-exec:
 	docker compose -p bekup-development -f deployments/local/docker-compose.yml exec app bash
 build:
+	go build -ldflags="-s -w" -o bin/bekup cmd/main.go
+docker-build:
+	docker build -t  pandeptwidyaop/bekup -f deployments/distribute/Dockerfile .
+docker-release:
+	docker push pandeptwidyaop/bekup
