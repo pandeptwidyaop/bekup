@@ -7,8 +7,8 @@
 ## TODO 
 
 - [x] MySQL & MariaDB Driver
-- [ ] PostgreSQL Driver
-- [ ] MongoDB Driver
+- [x] PostgreSQL Driver
+- [x] MongoDB Driver
 - [x] AWS S3 & MinIO Driver
 - [ ] FTP & SFTP Driver
 - [ ] API Documentation
