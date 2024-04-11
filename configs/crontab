@@ -1,1 +1,1 @@
-@daily /usr/local/bin/bekup /data/config.json
+@daily /usr/local/bin/bekup --config=/data/config.json
