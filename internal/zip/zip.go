@@ -1,7 +1,6 @@
 package zip
 
 import (
-	"archive/zip"
 	Z "archive/zip"
 	"context"
 	"errors"
@@ -158,7 +157,7 @@ func doZipDirectory(f *models.BackupFileInfo) *models.BackupFileInfo {
 	}
 	defer zipfile.Close()
 
-	archive := zip.NewWriter(zipfile)
+	archive := Z.NewWriter(zipfile)
 	defer archive.Close()
 
 	info, err := os.Stat(f.TempPath)
@@ -176,7 +175,7 @@ func doZipDirectory(f *models.BackupFileInfo) *models.BackupFileInfo {
 			return err
 		}
 
-		header, err := zip.FileInfoHeader(info)
+		header, err := Z.FileInfoHeader(info)
 		if err != nil {
 			return err
 		}
@@ -188,7 +187,7 @@ func doZipDirectory(f *models.BackupFileInfo) *models.BackupFileInfo {
 		if info.IsDir() {
 			header.Name += "/"
 		} else {
-			header.Method = zip.Deflate
+			header.Method = Z.Deflate
 		}
 
 		writer, err := archive.CreateHeader(header)
