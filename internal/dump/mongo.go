@@ -137,7 +137,7 @@ func mongoDoBackup(f *models.BackupFileInfo) *models.BackupFileInfo {
 		uri = fmt.Sprintf("mongodb://%s:%s@%s:%s", f.Config.Username, f.Config.Password, f.Config.Host, f.Config.Port)
 	}
 
-	command := exec.Command("mongodump", "--uri", uri, "--db", f.DatabaseName, "--out", f.TempPath)
+	command := exec.Command("mongodump", "--uri", uri, "--db", f.DatabaseName, "--authenticationDatabase=admin", "--out", f.TempPath)
 
 	command.Stderr = &stderr
 

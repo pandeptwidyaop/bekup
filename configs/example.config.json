@@ -25,6 +25,15 @@
             ]
         },
         {
+            "driver": "mongodb",
+            "mongodb_uri": "mongodb://test:test@127.0.0.1:27017",
+            "databases": [
+                "database-1",
+                "database-2",
+                "database-3"
+            ]
+        },
+        {
             "driver": "redis",
             "host": "127.0.0.1",
             "port": "6379",

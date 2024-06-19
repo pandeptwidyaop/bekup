@@ -52,7 +52,7 @@ To run Bekup, a configuration file with a `json` extension is required. You can 
 | `sources.*.port`|`string` |Database port |
 | `sources.*.username` |`string`| Database username |
 | `sources.*.password` |`string`| Database password |
-| `sources.*.mongodb_uri`|`string`| For mongodb driver only, if `mongodb_uri` defined will ignore other host,port,username and password. Example `mongodb://username:password@host:port?authSource=admin`|
+| `sources.*.mongodb_uri`|`string`| For mongodb driver only, if `mongodb_uri` defined will ignore other host,port,username and password. Example `mongodb://username:password@host:port` (without trailing database). By default, the authSource is automatically defined to `admin` database.|
 |`source.*.databases.*`| `string`| Database name want to backup |
 | `destinations.*.driver`|`string`|Driver options for backup destination, now options are `s3`,`ftp`,`sftp`|
 |`destinations.*.aws_access_key`|`string`|Your aws access key, required if using `s3` driver|

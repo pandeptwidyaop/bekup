@@ -25,6 +25,8 @@ func databaseManager(ctx context.Context, worker int, sources ...config.ConfigSo
 			chans = append(chans, PostgresRun(ctx, source, worker))
 		case "redis":
 			chans = append(chans, RedisRun(ctx, source, worker))
+		case "mongodb":
+			chans = append(chans, MongoRun(ctx, source, worker))
 		default:
 			return nil, exception.ErrConfigSourceDriverNotAvailable
 		}
