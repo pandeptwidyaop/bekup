@@ -17,13 +17,13 @@ import (
 	"github.com/pandeptwidyaop/bekup/internal/models"
 )
 
-func RedisRun(ctx context.Context, source config.ConfigSource, worker int) <-chan *models.BackupFileInfo {
-	ch := redisRegister(ctx, source)
+func RedisRun(ctx context.Context, config config.Config, source config.ConfigSource, worker int) <-chan *models.BackupFileInfo {
+	ch := redisRegister(ctx, config, source)
 
 	return redisBackupWithWorker(ctx, ch, worker)
 }
 
-func redisRegister(ctx context.Context, source config.ConfigSource) <-chan *models.BackupFileInfo {
+func redisRegister(ctx context.Context, config config.Config, source config.ConfigSource) <-chan *models.BackupFileInfo {
 	log.GetInstance().Info("redis: preparing backup")
 
 	out := make(chan *models.BackupFileInfo)
@@ -38,13 +38,23 @@ func redisRegister(ctx context.Context, source config.ConfigSource) <-chan *mode
 			id := uuid.New().String()
 
 			fileName := fmt.Sprintf("redis-%s-%s-%s.rdb", time.Now().Format("2006-01-02-15-04-05-00"), db, id)
-
+			if source.Driver == "redis-clusters" {
+				if len(source.Databases) > 0 {
+					db = source.Databases[0]
+				} else {
+					db = "slot1"
+				}
+				fileName = fmt.Sprintf("redis-cluster-%s-%s-%s.rdb", time.Now().Format("2006-01-02-15-04-05-00"), db, id)
+			}
 			log.GetInstance().Info("redis: registering db ", db)
 
 			out <- &models.BackupFileInfo{
+				Driver:       source.Driver,
 				DatabaseName: db,
 				FileName:     fileName,
 				Config:       source,
+				TempPath:     config.TempPath,
+				ZipPassword:  config.ZipPassword,
 			}
 		}
 

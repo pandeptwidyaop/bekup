@@ -22,7 +22,7 @@ func TestMongo(t *testing.T) {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
-	ch := dump.MongoRun(ctx, conf, 2)
+	ch := dump.MongoRun(ctx, config.Config{}, conf, 2)
 
 	for c := range ch {
 		if c.Err != nil {

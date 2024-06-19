@@ -5,6 +5,7 @@ go 1.22.0
 require (
 	github.com/aws/aws-sdk-go-v2/credentials v1.17.10
 	github.com/stretchr/testify v1.9.0
+	github.com/yeka/zip v0.0.0-20231116150916-03d6312748a9
 )
 
 require (
@@ -22,7 +23,8 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/ssooidc v1.23.4 // indirect
 	github.com/aws/aws-sdk-go-v2/service/sts v1.28.6 // indirect
 	github.com/aws/smithy-go v1.20.2 // indirect
-	golang.org/x/sys v0.0.0-20220715151400-c0bba94af5f8 // indirect
+	golang.org/x/crypto v0.24.0 // indirect
+	golang.org/x/sys v0.21.0 // indirect
 )
 
 require (

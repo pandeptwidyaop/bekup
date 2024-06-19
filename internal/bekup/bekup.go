@@ -18,7 +18,7 @@ func Run(ctx context.Context, config config.Config, worker int) error {
 
 	g, ctx := errgroup.WithContext(ctx)
 
-	dumpCh, err := dump.Run(ctx, worker, config.Sources...)
+	dumpCh, err := dump.Run(ctx, worker, config, config.Sources...)
 	if err != nil {
 		cancel()
 		return err

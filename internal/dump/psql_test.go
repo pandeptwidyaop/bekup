@@ -10,7 +10,7 @@ import (
 )
 
 func Test_psql(t *testing.T) {
-	config := config.ConfigSource{
+	configPsql := config.ConfigSource{
 		Driver:   "postgres",
 		Username: "test",
 		Password: "test",
@@ -27,7 +27,7 @@ func Test_psql(t *testing.T) {
 
 	defer cancel()
 
-	ch := dump.PostgresRun(ctx, config, 2)
+	ch := dump.PostgresRun(ctx, config.Config{}, configPsql, 2)
 
 	for c := range ch {
 		if c.Err != nil {

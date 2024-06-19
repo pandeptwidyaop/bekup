@@ -10,7 +10,7 @@ import (
 )
 
 func Test_Redis(t *testing.T) {
-	config := config.ConfigSource{
+	configRedis := config.ConfigSource{
 		Driver:   "redis",
 		Password: "",
 		Host:     "localhost",
@@ -26,7 +26,7 @@ func Test_Redis(t *testing.T) {
 
 	defer cancel()
 
-	ch := dump.RedisRun(ctx, config, 2)
+	ch := dump.RedisRun(ctx, config.Config{}, configRedis, 2)
 
 	for c := range ch {
 		if c.Err != nil {
