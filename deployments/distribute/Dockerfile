@@ -12,7 +12,7 @@ FROM alpine:3.19
 
 ARG ID=1000
 
-RUN apk add --no-cache curl mysql-client zip bash postgresql-client mongodb-tools
+RUN apk add --no-cache curl mysql-client zip bash postgresql-client mongodb-tools redis-tools
 
 RUN addgroup -g $ID devops && adduser -u $ID -G devops -D devops
 

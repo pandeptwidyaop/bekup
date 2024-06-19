@@ -33,7 +33,7 @@ func S3Upload(ctx context.Context, f *models.BackupFileInfo, d config.ConfigDest
 
 	_, err = client.PutObject(ctx, &s3.PutObjectInput{
 		Bucket: aws.String(d.AWSBucket),
-		Key:    aws.String(fmt.Sprintf("%s/%s/%s", d.RootDirectory, f.DatabaseName, f.ZipName)),
+		Key:    aws.String(fmt.Sprintf("%s/%s/%s/%s", d.RootDirectory, f.Driver, f.DatabaseName, f.ZipName)),
 		Body:   file,
 	})
 
@@ -43,7 +43,7 @@ func S3Upload(ctx context.Context, f *models.BackupFileInfo, d config.ConfigDest
 		return f
 	}
 
-	log.GetInstance().Info("s3: ", f.ZipPath," uploaded to s3")
+	log.GetInstance().Info("s3: ", f.ZipPath, " uploaded to s3")
 
 	return f
 }

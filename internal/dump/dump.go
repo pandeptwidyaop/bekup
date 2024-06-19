@@ -9,20 +9,24 @@ import (
 	"github.com/pandeptwidyaop/bekup/internal/models"
 )
 
-func Run(ctx context.Context, worker int, sources ...config.ConfigSource) (<-chan *models.BackupFileInfo, error) {
-	return databaseManager(ctx, worker, sources...)
+func Run(ctx context.Context, worker int, config config.Config, sources ...config.ConfigSource) (<-chan *models.BackupFileInfo, error) {
+	return databaseManager(ctx, worker, config, sources...)
 }
 
-func databaseManager(ctx context.Context, worker int, sources ...config.ConfigSource) (<-chan *models.BackupFileInfo, error) {
+func databaseManager(ctx context.Context, worker int, config config.Config, sources ...config.ConfigSource) (<-chan *models.BackupFileInfo, error) {
 
 	var chans []<-chan *models.BackupFileInfo
 
 	for _, source := range sources {
 		switch source.Driver {
 		case "mysql":
-			chans = append(chans, MysqlRun(ctx, source, worker))
+			chans = append(chans, MysqlRun(ctx, config, source, worker))
 		case "postgres":
-			chans = append(chans, PostgresRun(ctx, source, worker))
+			chans = append(chans, PostgresRun(ctx, config, source, worker))
+		case "redis", "redis-clusters":
+			chans = append(chans, RedisRun(ctx, config, source, worker))
+		case "mongodb":
+			chans = append(chans, MongoRun(ctx, config, source, worker))
 		default:
 			return nil, exception.ErrConfigSourceDriverNotAvailable
 		}

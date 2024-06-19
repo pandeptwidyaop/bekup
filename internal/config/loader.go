@@ -3,7 +3,6 @@ package config
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 	"io"
 	"os"
 	"strings"
@@ -13,7 +12,7 @@ import (
 )
 
 var (
-	AVAILABLE_SOURCE_DRIVERS      []string = []string{"mysql", "postgres", "mongodb"}
+	AVAILABLE_SOURCE_DRIVERS      []string = []string{"mysql", "postgres", "mongodb", "redis", "redis-clusters"}
 	AVAILABLE_DESTINATION_DRIVERS []string = []string{"s3", "ftp"}
 )
 
@@ -150,18 +149,25 @@ func checkSourcesDriver(conf Config) error {
 }
 
 func checkDestinationDriver(conf Config) error {
-	count := 0
+	// count := 0
+	isAvail := false
 	for _, c := range conf.Destinations {
 		for _, d := range AVAILABLE_DESTINATION_DRIVERS {
 			if c.Driver == d {
-				count++
+				isAvail = true
+				// 			count++
 			}
 		}
 	}
 
-	if count != len(conf.Sources) {
+	if !isAvail {
+
 		return exception.ErrConfigDestinationDriverNotAvailable
 	}
+
+	// if count != len(conf.Sources) {
+	// 	return exception.ErrConfigDestinationDriverNotAvailable
+	// }
 
 	return nil
 }
@@ -173,6 +179,8 @@ func validateSourceConfig(conf Config) error {
 			return checkSourceMysqlDriver(sc)
 		case "postgres":
 			return checkSourcePostgresDriver(sc)
+		case "redis", "redis-clusters":
+			return checkSourceRedisDriver(sc)
 		case "mongodb":
 			return checkSourceMongodbDriver(sc)
 		}
@@ -238,10 +246,47 @@ func checkSourcePostgresDriver(source ConfigSource) error {
 		}
 	}
 
+	if len(msg) < 1 {
+		return nil
+	}
+
 	return errors.New("config postgres: some field empty: " + strings.Join(msg, ","))
 }
 
 func checkSourceMongodbDriver(source ConfigSource) error {
-	fmt.Println(source.Host)
-	return errors.New("config mongodb: not implemented yet")
+	msg := []string{}
+
+	if source.MongoDBURI == "" {
+		msg = append(msg, "mongodb_uri")
+	}
+
+	for _, db := range source.Databases {
+		if db == "" {
+			msg = append(msg, "database name")
+		}
+	}
+
+	if len(msg) < 1 {
+		return nil
+	}
+
+	return errors.New("config mongodb: some field empty: " + strings.Join(msg, ","))
+}
+
+func checkSourceRedisDriver(source ConfigSource) error {
+	msg := []string{}
+
+	if source.Host == "" {
+		msg = append(msg, "host")
+	}
+
+	if source.Port == "" {
+		msg = append(msg, "port")
+	}
+
+	if len(msg) < 1 {
+		return nil
+	}
+
+	return errors.New("config redis: some field empty: " + strings.Join(msg, ","))
 }

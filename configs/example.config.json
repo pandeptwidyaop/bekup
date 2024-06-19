@@ -23,6 +23,33 @@
                 "database-2",
                 "database-3"
             ]
+        },
+        {
+            "driver": "mongodb",
+            "mongodb_uri": "mongodb://test:test@127.0.0.1:27017",
+            "databases": [
+                "database-1",
+                "database-2",
+                "database-3"
+            ]
+        },
+        {
+            "driver": "redis",
+            "host": "127.0.0.1",
+            "port": "6379",
+            "password": "",
+            "databases": [
+                "all"
+            ]
+        },
+        {
+            "driver": "redis-clusters",
+            "host": "127.0.0.1",
+            "port": "6379",
+            "password": "",
+            "databases": [
+                "slot01"
+            ]
         }
     ],
     "destinations": [
@@ -32,7 +59,7 @@
             "aws_access_key": "YourAwsKey",
             "aws_secret_access_key": "YourAwsKeySecret",
             "root_directory": "/root/bucket/directtory",
-            "bucket": "bucket-name",
+            "aws_bucket": "bucket-name",
             "aws_url": "http://minio:8080"
         }
     ],

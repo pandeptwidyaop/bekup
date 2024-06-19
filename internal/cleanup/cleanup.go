@@ -81,7 +81,7 @@ func doCleanup(f *models.BackupFileInfo) *models.BackupFileInfo {
 
 		log.GetInstance().Info("cleanup: removing ", f.TempPath)
 		if checkFileExist(f.TempPath) {
-			err := os.Remove(f.TempPath)
+			err := os.RemoveAll(f.TempPath)
 			if err != nil {
 				f.Err = err
 			}
@@ -94,7 +94,7 @@ func doCleanup(f *models.BackupFileInfo) *models.BackupFileInfo {
 		log.GetInstance().Info("cleanup: removing ", f.ZipPath)
 
 		if checkFileExist(f.ZipPath) {
-			err := os.Remove(f.ZipPath)
+			err := os.RemoveAll(f.ZipPath)
 			if err != nil {
 				f.Err = err
 			}

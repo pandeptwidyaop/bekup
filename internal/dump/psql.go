@@ -16,13 +16,13 @@ import (
 	"github.com/pandeptwidyaop/bekup/internal/models"
 )
 
-func PostgresRun(ctx context.Context, source config.ConfigSource, worker int) <-chan *models.BackupFileInfo {
-	ch := postgresRegister(ctx, source)
+func PostgresRun(ctx context.Context, config config.Config, source config.ConfigSource, worker int) <-chan *models.BackupFileInfo {
+	ch := postgresRegister(ctx, config, source)
 
 	return postgresBackupWithWorker(ctx, ch, worker)
 }
 
-func postgresRegister(ctx context.Context, source config.ConfigSource) <-chan *models.BackupFileInfo {
+func postgresRegister(ctx context.Context, config config.Config, source config.ConfigSource) <-chan *models.BackupFileInfo {
 	log.GetInstance().Info("postgres: preparing backup")
 
 	out := make(chan *models.BackupFileInfo)
@@ -43,9 +43,12 @@ func postgresRegister(ctx context.Context, source config.ConfigSource) <-chan *m
 				log.GetInstance().Info("postgres: registering db ", db)
 
 				out <- &models.BackupFileInfo{
+					Driver:       source.Driver,
 					DatabaseName: db,
 					FileName:     fileName,
 					Config:       source,
+					TempPath:     config.TempPath,
+					ZipPassword:  config.ZipPassword,
 				}
 			}
 

@@ -1,7 +1,6 @@
 package zip
 
 import (
-	Z "archive/zip"
 	"context"
 	"errors"
 	"fmt"
@@ -10,6 +9,8 @@ import (
 	"path/filepath"
 	"strings"
 	"sync"
+
+	Z "github.com/yeka/zip"
 
 	"github.com/pandeptwidyaop/bekup/internal/log"
 	"github.com/pandeptwidyaop/bekup/internal/models"
@@ -91,7 +92,7 @@ func doZip(f *models.BackupFileInfo) *models.BackupFileInfo {
 	if err != nil {
 		f.Err = err
 		return f
-	}	
+	}
 
 	if typ == "file" {
 		return doZipSingleFile(f)
@@ -111,32 +112,18 @@ func doZipSingleFile(f *models.BackupFileInfo) *models.BackupFileInfo {
 	zw := Z.NewWriter(file)
 	defer zw.Close()
 
+	wr, err := zw.Encrypt(f.TempPath, f.ZipPassword, Z.AES256Encryption)
+	if err != nil {
+		f.Err = err
+		return f
+	}
+
 	fileToZip, err := os.Open(f.TempPath)
 	if err != nil {
 		f.Err = err
 		return f
 	}
 	defer fileToZip.Close()
-
-	info, err := fileToZip.Stat()
-	if err != nil {
-		f.Err = err
-		return f
-	}
-
-	head, err := Z.FileInfoHeader(info)
-	if err != nil {
-		f.Err = err
-		return f
-	}
-
-	head.Method = Z.Deflate
-
-	wr, err := zw.CreateHeader(head)
-	if err != nil {
-		f.Err = err
-		return f
-	}
 
 	_, err = io.Copy(wr, fileToZip)
 	if err != nil {
