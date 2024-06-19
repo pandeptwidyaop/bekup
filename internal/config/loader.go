@@ -173,6 +173,8 @@ func validateSourceConfig(conf Config) error {
 			return checkSourceMysqlDriver(sc)
 		case "postgres":
 			return checkSourcePostgresDriver(sc)
+		case "redis-standalone":
+			return checkSourceRedisStandaloneDriver(sc)
 		case "mongodb":
 			return checkSourceMongodbDriver(sc)
 		}
@@ -244,4 +246,18 @@ func checkSourcePostgresDriver(source ConfigSource) error {
 func checkSourceMongodbDriver(source ConfigSource) error {
 	fmt.Println(source.Host)
 	return errors.New("config mongodb: not implemented yet")
+}
+
+func checkSourceRedisStandaloneDriver(source ConfigSource) error {
+	msg := []string{}
+
+	if source.Host == "" {
+		msg = append(msg, "host")
+	}
+
+	if source.Port == "" {
+		msg = append(msg, "port")
+	}
+
+	return errors.New("config redis-standalone: some field empty: " + strings.Join(msg, ","))
 }
