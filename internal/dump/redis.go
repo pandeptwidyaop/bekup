@@ -151,7 +151,8 @@ func redisDoBackup(f *models.BackupFileInfo) *models.BackupFileInfo {
 		return f
 	}
 
-	if !strings.Contains(strings.ToLower(stdOutC1.String()), "background saving started") {
+	if !strings.Contains(strings.ToLower(stdOutC1.String()), "background saving started") &&
+		!strings.Contains(strings.ToLower(stdOutC1.String()), "already in progress") {
 		f.Err = errors.New("failed to execute background saving, either not allowed or already running")
 		return f
 	}
@@ -171,7 +172,7 @@ func redisDoBackup(f *models.BackupFileInfo) *models.BackupFileInfo {
 		}
 
 		if strings.Contains(outC2.String(), "bgsave_in_progress:1") {
-			time.Sleep(1 * time.Second)
+			time.Sleep(60 * time.Second)
 			continue
 		} else if strings.Contains(outC2.String(), "bgsave_in_progress:0") {
 			break
