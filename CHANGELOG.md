@@ -1,3 +1,10 @@
+## [1.0.2](https://github.com/pandeptwidyaop/bekup/compare/v1.0.1...v1.0.2) (2025-01-25)
+
+
+### Bug Fixes
+
+* mismatch version ([736e79f](https://github.com/pandeptwidyaop/bekup/commit/736e79ff5cc613701cc415c8d45af7e41349cd2e))
+
 ## [1.0.1](https://github.com/pandeptwidyaop/bekup/compare/v1.0.0...v1.0.1) (2025-01-25)
 
 
