@@ -2,7 +2,7 @@ FROM golang:1.22-alpine
 
 ARG ID=501
 
-RUN apk add --no-cache mysql-client zip bash postgresql-client mongodb-tools mongodb-cli redis-server redis-tools
+RUN apk add --no-cache mysql-client zip bash postgresql-client mongodb-tools mongodb-cli redis-server redis
 
 RUN addgroup -g $ID devops && adduser -u $ID -G devops -D devops
 
