@@ -9,15 +9,14 @@ import (
 	"github.com/pandeptwidyaop/bekup/internal/dump"
 )
 
-func Test_psql(t *testing.T) {
-	configPsql := config.ConfigSource{
-		Driver:   "postgres",
-		Username: "test",
-		Password: "test",
-		Host:     "postgres",
-		Port:     "5432",
+func Test_Redis(t *testing.T) {
+	configRedis := config.ConfigSource{
+		Driver:   "redis",
+		Password: "",
+		Host:     "localhost",
+		Port:     "6379",
 		Databases: []string{
-			"test",
+			"all",
 		},
 	}
 
@@ -27,7 +26,7 @@ func Test_psql(t *testing.T) {
 
 	defer cancel()
 
-	ch := dump.PostgresRun(ctx, config.Config{}, configPsql, 2)
+	ch := dump.RedisRun(ctx, config.Config{}, configRedis, 2)
 
 	for c := range ch {
 		if c.Err != nil {

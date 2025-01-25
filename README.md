@@ -5,7 +5,7 @@
 
 > Under Development! 
 
-Bekup is a tool for automating database backups and uploading them to cloud storage. The databases currently supported are: MySQL, MariaDB, PostgreSQL, and MongoDB. As for the cloud storage options supported, they include AWS S3, MinIO, FTP, and SFTP.
+Bekup is a tool for automating database backups and uploading them to cloud storage. The databases currently supported are: MySQL, MariaDB, PostgreSQL, MongoDB and Redis. As for the cloud storage options supported, they include AWS S3, MinIO, FTP, and SFTP.
 
 ## Features
 
@@ -25,6 +25,7 @@ To run Bekup, there are several tools that currently need to be installed first,
 - For backing up MySQL or MariaDB, `mysqldump` is required.
 - For backing up PostgreSQL, `pg_dump` is needed.
 - For backing up MongoDB, `mongodump` is necessary.
+- For backing up Redis, `redis-cli` is exist.
 
 For convenience, you can use a ready-to-use Docker image, [See docker instruction](#for-docker-user).
 
@@ -46,12 +47,12 @@ To run Bekup, a configuration file with a `json` extension is required. You can 
 
 | Json Key | Type|Description |
 |----------|-----|-------|
-| `sources.*.driver` | `string` |Database driver, available options : `mysql`,`postgres`,`mongodb`|
+| `sources.*.driver` | `string` |Database driver, available options : `mysql`,`postgres`,`mongodb`,`redis`|
 | `sources.*.host`|`string` |Database host |
 | `sources.*.port`|`string` |Database port |
 | `sources.*.username` |`string`| Database username |
 | `sources.*.password` |`string`| Database password |
-| `sources.*.mongodb_uri`|`string`| For mongodb driver only, if `mongodb_uri` defined will ignore other host,port,username and password. Example `mongodb://username:password@host:port?authSource=admin`|
+| `sources.*.mongodb_uri`|`string`| For mongodb driver only, if `mongodb_uri` defined will ignore other host,port,username and password. Example `mongodb://username:password@host:port` (without trailing database). By default, the authSource is automatically defined to `admin` database.|
 |`source.*.databases.*`| `string`| Database name want to backup |
 | `destinations.*.driver`|`string`|Driver options for backup destination, now options are `s3`,`ftp`,`sftp`|
 |`destinations.*.aws_access_key`|`string`|Your aws access key, required if using `s3` driver|
@@ -66,6 +67,7 @@ To run Bekup, a configuration file with a `json` extension is required. You can 
 - [x] MySQL & MariaDB Driver
 - [x] PostgreSQL Driver
 - [x] MongoDB Driver
+- [x] Redis Driver
 - [x] AWS S3 & MinIO Driver
 - [ ] FTP & SFTP Driver
 - [ ] API Documentation

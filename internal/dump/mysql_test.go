@@ -16,7 +16,7 @@ func Test_run(t *testing.T) {
 	source := config.ConfigSource{
 		Driver:   "mysql",
 		Host:     "127.0.0.1",
-		Port:     "33061",
+		Port:     "3306",
 		Username: "root",
 		Password: "root",
 	}
@@ -32,7 +32,7 @@ func Test_run(t *testing.T) {
 
 	startAt := time.Now()
 
-	chInit := dump.MysqlRun(ctx, source, 10)
+	chInit := dump.MysqlRun(ctx, config.Config{}, source, 10)
 
 	chZip := zip.ZipWithWorker(ctx, chInit, 10)
 

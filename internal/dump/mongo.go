@@ -17,13 +17,13 @@ import (
 	"github.com/pandeptwidyaop/bekup/internal/models"
 )
 
-func MongoRun(ctx context.Context, source config.ConfigSource, worker int) <-chan *models.BackupFileInfo {
-	ch := mongoRegister(ctx, source)
+func MongoRun(ctx context.Context, config config.Config, source config.ConfigSource, worker int) <-chan *models.BackupFileInfo {
+	ch := mongoRegister(ctx, config, source)
 
 	return mongoBackupWithWorker(ctx, ch, worker)
 }
 
-func mongoRegister(ctx context.Context, source config.ConfigSource) <-chan *models.BackupFileInfo {
+func mongoRegister(ctx context.Context, config config.Config, source config.ConfigSource) <-chan *models.BackupFileInfo {
 	out := make(chan *models.BackupFileInfo)
 
 	go func() {
@@ -42,9 +42,12 @@ func mongoRegister(ctx context.Context, source config.ConfigSource) <-chan *mode
 				log.GetInstance().Info("mongo: registering db ", db)
 
 				out <- &models.BackupFileInfo{
+					Driver:       source.Driver,
 					DatabaseName: db,
 					FileName:     fileName,
 					Config:       source,
+					TempPath:     config.TempPath,
+					ZipPassword:  config.ZipPassword,
 				}
 			}
 		}
@@ -137,7 +140,7 @@ func mongoDoBackup(f *models.BackupFileInfo) *models.BackupFileInfo {
 		uri = fmt.Sprintf("mongodb://%s:%s@%s:%s", f.Config.Username, f.Config.Password, f.Config.Host, f.Config.Port)
 	}
 
-	command := exec.Command("mongodump", "--uri", uri, "--db", f.DatabaseName, "--out", f.TempPath)
+	command := exec.Command("mongodump", "--uri", uri, "--db", f.DatabaseName, "--authenticationDatabase=admin", "--out", f.TempPath)
 
 	command.Stderr = &stderr
 

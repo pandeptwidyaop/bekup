@@ -17,13 +17,13 @@ import (
 	"github.com/pandeptwidyaop/bekup/internal/models"
 )
 
-func MysqlRun(ctx context.Context, source config.ConfigSource, worker int) <-chan *models.BackupFileInfo {
-	ch := mysqlRegister(ctx, source)
+func MysqlRun(ctx context.Context, config config.Config, source config.ConfigSource, worker int) <-chan *models.BackupFileInfo {
+	ch := mysqlRegister(ctx, config, source)
 
 	return mysqlBackupWithWorker(ctx, ch, worker)
 }
 
-func mysqlRegister(ctx context.Context, source config.ConfigSource) <-chan *models.BackupFileInfo {
+func mysqlRegister(ctx context.Context, config config.Config, source config.ConfigSource) <-chan *models.BackupFileInfo {
 	log.GetInstance().Info("mysql: preparing backup")
 	channel := make(chan *models.BackupFileInfo)
 
@@ -36,9 +36,12 @@ func mysqlRegister(ctx context.Context, source config.ConfigSource) <-chan *mode
 			log.GetInstance().Info("mysql: registering db ", db)
 			select {
 			case channel <- &models.BackupFileInfo{
+				Driver:       source.Driver,
 				DatabaseName: db,
 				FileName:     fileName,
 				Config:       source,
+				TempPath:     config.TempPath,
+				ZipPassword:  config.ZipPassword,
 			}:
 			case <-ctx.Done():
 				return
