@@ -53,9 +53,9 @@ jobs:
           push: true
           tags: |
            ghcr.io/${{ github.repository_owner }}/${{ github.repository }}:latest
-           ghcr.io/${{ github.repository_owner }}/${{ github.repository }}:${{ needs.versioning.outputs.new_release_version }}
+           ghcr.io/${{ github.repository_owner }}/${{ github.repository }}:${{ needs.versioning.outputs.new_release_major_version }}.${{ needs.versioning.outputs.new_release_minor_version }}
            ghcr.io/${{ github.repository_owner }}/${{ github.repository }}:${{ needs.versioning.outputs.new_release_major_version }}
-           ghcr.io/${{ github.repository_owner }}/${{ github.repository }}:${{ needs.versioning.outputs.new_release_major_version }}.${{ steps.semantic.outputs.new_release_minor_version }}
+           ghcr.io/${{ github.repository_owner }}/${{ github.repository }}:${{ needs.versioning.outputs.new_release_version }}
   golang-build:
     name: Go Build
     runs-on: ubuntu-latest
