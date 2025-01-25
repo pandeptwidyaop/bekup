@@ -1,3 +1,10 @@
+## [1.0.3](https://github.com/pandeptwidyaop/bekup/compare/v1.0.2...v1.0.3) (2025-01-25)
+
+
+### Bug Fixes
+
+* fix Dockerfile for redis ([8b00469](https://github.com/pandeptwidyaop/bekup/commit/8b004697cb03b7c4bdb46361c79c3a75d4abb283))
+
 ## [1.0.2](https://github.com/pandeptwidyaop/bekup/compare/v1.0.1...v1.0.2) (2025-01-25)
 
 
