@@ -1,3 +1,10 @@
+## [1.0.1](https://github.com/pandeptwidyaop/bekup/compare/v1.0.0...v1.0.1) (2025-01-25)
+
+
+### Bug Fixes
+
+* wait redis bgsave instead of throwing error if already started ([43d309f](https://github.com/pandeptwidyaop/bekup/commit/43d309f5c7e70492076a4c6586781f743d33f214))
+
 # 1.0.0 (2025-01-25)
 
 
