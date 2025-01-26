@@ -1,3 +1,10 @@
+# [1.1.0](https://github.com/pandeptwidyaop/bekup/compare/v1.0.5...v1.1.0) (2025-01-26)
+
+
+### Features
+
+* update supercronic to v.2.33 ([505bdba](https://github.com/pandeptwidyaop/bekup/commit/505bdbaa13f6741003a25c4cfa1a1bf301fc1254))
+
 ## [1.0.5](https://github.com/pandeptwidyaop/bekup/compare/v1.0.4...v1.0.5) (2025-01-26)
 
 
