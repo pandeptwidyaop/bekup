@@ -76,7 +76,7 @@ jobs:
           for platform in "${platforms[@]}"; do
             os=$(echo $platform | cut -d'/' -f1)
             arch=$(echo $platform | cut -d'/' -f2)
-            output="build/bekup-${os}-${arch}-${{needs.versioning.outputs.new_release_version}}"
+            output="build/bekup-${os}-${arch}"
             if [ "$os" = "windows" ]; then
               output="${output}.exe"
             fi
