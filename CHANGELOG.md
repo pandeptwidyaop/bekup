@@ -1,3 +1,11 @@
+## [1.0.5](https://github.com/pandeptwidyaop/bekup/compare/v1.0.4...v1.0.5) (2025-01-26)
+
+
+### Bug Fixes
+
+* update ci config ([3940c49](https://github.com/pandeptwidyaop/bekup/commit/3940c49345ab825beedb617f32ab105c74b747c6))
+* update ci config ([dc30797](https://github.com/pandeptwidyaop/bekup/commit/dc307978268ddf9e41e048a082f661cb6caa71d3))
+
 ## [1.0.4](https://github.com/pandeptwidyaop/bekup/compare/v1.0.3...v1.0.4) (2025-01-25)
 
 
