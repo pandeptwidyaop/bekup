@@ -64,5 +64,6 @@
         }
     ],
     "zip_password": "123456",
-    "worker": 2
+    "worker": 2,
+    "temp_path": "/var/tmp"
 }
