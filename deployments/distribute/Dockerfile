@@ -43,4 +43,6 @@ COPY --from=builder /build/configs/crontab /data/
 
 
 
-CMD [ "supercronic" ,"/data/crontab"]
+# Path absolut wajib: saat PID 1, supercronic (>= 0.2.3x) mem-fork dirinya sendiri lewat argv[0]
+# untuk reaping; argv[0] "supercronic" (relatif) gagal dengan "Failed to fork exec".
+CMD [ "/usr/local/bin/supercronic", "/data/crontab" ]
