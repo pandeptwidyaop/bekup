@@ -1,3 +1,10 @@
+## [1.2.1](https://github.com/pandeptwidyaop/bekup/compare/v1.2.0...v1.2.1) (2026-11-04)
+
+
+### Bug Fixes
+
+* run supercronic by absolute path so PID 1 reaping works ([8272dcb](https://github.com/pandeptwidyaop/bekup/commit/8272dcbb3d509e6e321e5b8aa642f58b1f638e1b))
+
 # [1.2.0](https://github.com/pandeptwidyaop/bekup/compare/v1.1.0...v1.2.0) (2026-11-04)
 
 
