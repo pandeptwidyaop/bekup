@@ -1,4 +1,4 @@
-FROM golang:1.22-alpine as builder
+FROM golang:1.25-alpine AS builder
 
 RUN apk add --no-cache make && mkdir /build 
 
@@ -8,14 +8,17 @@ RUN cd /build && go mod download
 
 RUN cd /build && make build
 
-FROM alpine:3.19 
+# alpine 3.23: postgresql18-client tersedia. pg_dump 18 bisa men-dump server PostgreSQL lama
+# (9.2+), jadi tetap kompatibel dengan instalasi PG 14/16; sebaliknya pg_dump 16 menolak server 18.
+FROM alpine:3.23
 
 ARG TARGETARCH
 ARG TARGETOS
 ARG TARGETPLATFORM
 ARG ID=1000
 
-RUN apk add --no-cache curl mysql-client zip bash postgresql-client mongodb-tools redis
+RUN apk add --no-cache curl mysql-client zip bash postgresql18-client mongodb-tools redis \
+    && pg_dump --version | grep -q ' 18\.'
 
 RUN addgroup -g $ID devops && adduser -u $ID -G devops -D devops
 
