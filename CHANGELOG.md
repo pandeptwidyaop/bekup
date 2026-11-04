@@ -1,3 +1,10 @@
+# [1.2.0](https://github.com/pandeptwidyaop/bekup/compare/v1.1.0...v1.2.0) (2026-11-04)
+
+
+### Features
+
+* support PostgreSQL 18 (postgresql18-client) ([9f69e94](https://github.com/pandeptwidyaop/bekup/commit/9f69e94cbc23eec057f0f22e065e460a95a8935b))
+
 # [1.1.0](https://github.com/pandeptwidyaop/bekup/compare/v1.0.5...v1.1.0) (2025-01-26)
 
 
